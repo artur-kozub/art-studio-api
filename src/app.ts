@@ -12,8 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 
-app.use('/api/bookings', bookRoutes);
-app.use('/api/payments', paymentRoutes);
+app.use(process.env.BOOKINGS_ENDPOINT + '', bookRoutes);
+app.use(process.env.PAYMENTS_ENDPOINT + '', paymentRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
@@ -21,7 +21,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('Server is on!')
+    res.send('/')
+});
+
+app.get('/healthcheck', (req: Request, res: Response) => {
+    res.send('Servers is on...')
 });
 
 app.listen(PORT, () => {

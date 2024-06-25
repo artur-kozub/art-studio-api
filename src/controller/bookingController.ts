@@ -4,9 +4,9 @@ import BookModel from "../model/Booking";
 const createBooking = async (req: Request, res: Response) => {
     const productPrice = req.query.price;
     const orderDate = Math.floor(Date.now() / 1000);
-    const orderReference = 'oid' + Math.floor(Math.random() * 1000000000000);
+    const orderReference = 'oid' + Math.floor(Math.random() * 1000000000000000);
     const productCount = 1;
-    const productName = 'photosession';
+    const productName = process.env.PRODUCT_NAME;
 
     try {
         const booking = new BookModel({
@@ -18,8 +18,9 @@ const createBooking = async (req: Request, res: Response) => {
         })
 
         await booking.save();
-        console.log('created booking... \n your url: https://d70c-46-33-39-10.ngrok-free.app/api/payments/payment-form?currency=UAH&productName[]=photosession&productCount[]=1&bookingId=' + String(booking._id))
-        res.status(200).json({ message: 'Created booking record, needs to be payed to confirm', booking })
+
+        console.log('Created booking...')
+        res.status(200).json({ message: 'Created booking record, needs to be payed to be confirmed', booking })
     } catch(e: any) {
         res.status(500).send('Something went wrong on createBooking stage...')
     }
@@ -27,10 +28,12 @@ const createBooking = async (req: Request, res: Response) => {
 
 const getBookingRecords = async (req: Request, res: Response) => {
     try {
+        console.log('Retrieving all bookings...')
         const records = await BookModel.find();
         res.status(200).json(records);
     } catch (e: any) {
-        res.status(400).json({ message: e.message })
+        console.log('Fail at getBookingRecords:', e.message);
+        res.status(400).json({ message: e.message });
     }
 }
 
