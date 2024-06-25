@@ -13,13 +13,13 @@ class WayForPayService {
     private merchantAccount: string;
     private merchantSecretKey: string;
     private merchantDomain: string;
-    private apiUrl: string;
+    private wfpApiUrl: string;
 
     constructor() {
         this.merchantAccount = process.env.MERCHANT_ACCOUNT!;
         this.merchantSecretKey = process.env.MERCHANT_SECRET!;
         this.merchantDomain = process.env.MERCHANT_DOMAIN!;
-        this.apiUrl = process.env.WAYFORPAY_PURCHASE_URL!;
+        this.wfpApiUrl = process.env.WAYFORPAY_PURCHASE_URL!;
     }
 
     generateSignature(...data: any): string {
@@ -36,18 +36,16 @@ class WayForPayService {
             throw new Error('Booking with this oid not found');
         }
         const { orderDate, productPrice } = booking;
-        console.log('found booking:', booking);
 
         const message = `${this.merchantAccount};${this.merchantDomain};${orderReference};${orderDate};${productPrice};${currency};${productName};${productPrice};${productCount}`;
-        console.log('this is string at createPaymentForm stage', message);
         const hmac = crypto.createHmac('md5', this.merchantSecretKey);
         hmac.update(message);
         const merchantSignature = hmac.digest('hex');
 
-        console.log('wfp service, this is VALID merchant signature ' + merchantSignature);
+        const serviceUrl = process.env.WFP_SERVICE_URL
 
         const HTML_FORM = `
-            <form method="post" action="https://secure.wayforpay.com/pay" accept-charset="utf-8">
+            <form method="post" action=${this.wfpApiUrl} accept-charset="utf-8">
                 <input type="hidden" name="merchantAccount" value="${this.merchantAccount}">
                 <input type="hidden" name="merchantAuthType" value="SimpleSignature">
                 <input type="hidden" name="merchantDomainName" value="${this.merchantDomain}">
@@ -60,7 +58,7 @@ class WayForPayService {
                 <input type="hidden" name="productPrice[]" value="${productPrice}">
                 <input type="hidden" name="productCount[]" value="${productCount}">
                 <input type="hidden" name="defaultPaymentSystem" value="card">
-                <input type="hidden" name="serviceUrl" value="https://d70c-46-33-39-10.ngrok-free.app/api/payments/set-status">
+                <input type="hidden" name="serviceUrl" value="https://67fb-46-33-39-10.ngrok-free.app/api/payments/set-status">
                 <input type="hidden" name="merchantSignature" value="${merchantSignature}">
                 <input type="submit" value="Перейти до оплати">
             </form>`
