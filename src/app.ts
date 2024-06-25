@@ -1,11 +1,14 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import connectDB from './db';
 import cors from 'cors';
+import morgan from 'morgan';
 import bookRoutes from './routes/bookingRoute';
 import paymentRoutes from './routes/paymentRoute';
 
 const app: Application = express();
 const PORT = process.env.EXPRESS_PORT || 5001;
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
