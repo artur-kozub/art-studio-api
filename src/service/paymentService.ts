@@ -58,7 +58,7 @@ class WayForPayService {
                 <input type="hidden" name="productPrice[]" value="${productPrice}">
                 <input type="hidden" name="productCount[]" value="${productCount}">
                 <input type="hidden" name="defaultPaymentSystem" value="card">
-                <input type="hidden" name="serviceUrl" value="https://67fb-46-33-39-10.ngrok-free.app/api/payments/set-status">
+                <input type="hidden" name="serviceUrl" value="${serviceUrl}api/payments/set-status">
                 <input type="hidden" name="merchantSignature" value="${merchantSignature}">
                 <input type="submit" value="Перейти до оплати">
             </form>`
