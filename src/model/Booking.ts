@@ -18,7 +18,7 @@ const BookingSchema: Schema = new Schema({
     productPrice: { type: [Number], required: true },
     productCount: { type: [Number], required: true },
     productName: { type: String, required: true },
-    bookingDate: { type: String, required: true },
+    bookingDate: { type: String, required: true, unique: true },
     currency: { type: String },
     paymentStatus: { type: String },
     reasonCode: { type: Number },
