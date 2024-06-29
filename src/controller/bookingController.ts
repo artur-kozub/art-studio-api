@@ -85,7 +85,8 @@ const deleteBooking = async (req: Request, res: Response) => {
         console.log('Deleted booking successfully\n', bookingDate)
         res.status(200).json({ message: 'Deleted booking successfully', bookingDate })
     } catch (e: any) {
-
+        console.log('Fail at deleteBooking', e.message)
+        res.status(500).json({ message: e.message })
     }
 }
 
