@@ -63,11 +63,30 @@ const updateBooking = async (req: Request, res: Response) => {
         booking.bookingDate = newBookingDate;
         await booking.save();
 
-        res.status(200).json({ message: 'Updated booking', newBookingDate: newBookingDate, oldBookingDate: oldBookingDate })
+        console.log('Updated booking succesfully \n', { newBookingDate: newBookingDate, oldBookingDate: oldBookingDate });
+        res.status(200).json({ message: 'Updated booking succesfully', newBookingDate: newBookingDate, oldBookingDate: oldBookingDate })
     } catch (e: any) {
         console.log('Fail at updateBooking:', e.message)
         res.status(500).json({ message: e.message })
     }
 }
 
-export default { createBooking, getBookingRecords, updateBooking };
+const deleteBooking = async (req: Request, res: Response) => {
+    const bookingDate = req.body.bookingDate;
+
+    try {
+        console.log('Deleting booking by date and time');
+        const booking = await BookModel.findOneAndDelete({ bookingDate });
+        if (!booking) {
+            console.log('Fail at deleteBooking, the booking with this date and time was not found')
+            res.status(404).json({ message: 'Fail at deleteBooking, the booking with this date and time was not found' })
+        }
+
+        console.log('Deleted booking successfully\n', bookingDate)
+        res.status(200).json({ message: 'Deleted booking successfully', bookingDate })
+    } catch (e: any) {
+
+    }
+}
+
+export default { createBooking, getBookingRecords, updateBooking, deleteBooking };
