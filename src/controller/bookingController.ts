@@ -3,9 +3,11 @@ import BookModel from "../model/Booking";
 
 const createBooking = async (req: Request, res: Response) => {
     const productPrice = req.query.price;
+    const bookingDate = req.body.bookingDate;
     const orderDate = Math.floor(Date.now() / 1000);
     const orderReference = 'oid' + Math.floor(Math.random() * 1000000000000000);
     const productCount = 1;
+    const currency = 'UAH';
     const productName = process.env.PRODUCT_NAME;
 
     try {
@@ -14,6 +16,8 @@ const createBooking = async (req: Request, res: Response) => {
             orderReference,
             orderDate,
             productCount,
+            bookingDate,
+            currency,
             productName
         })
 
@@ -37,4 +41,8 @@ const getBookingRecords = async (req: Request, res: Response) => {
     }
 }
 
-export default { createBooking, getBookingRecords };
+const updateBooking = async (req: Request, res: Response) => {
+    const { newOrderDate, oldOrderDate } = req.body;
+}
+
+export default { createBooking, getBookingRecords, updateBooking };
