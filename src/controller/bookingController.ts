@@ -14,7 +14,7 @@ const createBooking = async (req: Request, res: Response) => {
         const bookingExists = await BookModel.findOne({ bookingDate })
         if (bookingExists) {
             console.log('Failed at createBooking. Booking with this date and time already exists')
-            res.status(400).json({ message: 'Failed at createBooking. Booking with this date and time already exists' })
+            return res.status(409).json({ message: 'Failed at createBooking. Booking with this date and time already exists' })
         }
 
         const booking = new BookModel({
@@ -30,7 +30,7 @@ const createBooking = async (req: Request, res: Response) => {
         await booking.save();
 
         console.log('Created booking...')
-        res.status(200).json({ message: 'Created booking record, needs to be payed to be confirmed', booking })
+        res.status(201).json({ message: 'Created booking record, needs to be payed to be confirmed', booking })
     } catch (e: any) {
         res.status(500).send('Something went wrong on createBooking stage...')
     }
