@@ -8,6 +8,7 @@ interface IBooking extends Document {
     productName: string;
     currency: string;
     bookingDate: string;
+    bookingHours?: string;
     paymentStatus?: string;
     reasonCode?: number;
 }
@@ -19,6 +20,7 @@ const BookingSchema: Schema = new Schema({
     productCount: { type: [Number], required: true },
     productName: { type: String, required: true },
     bookingDate: { type: String, required: true, unique: true },
+    bookingHours: { type: String },
     currency: { type: String },
     paymentStatus: { type: String },
     reasonCode: { type: Number },
