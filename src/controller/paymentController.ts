@@ -5,20 +5,20 @@ import Booking from '../model/Booking';
 const wfp = new WayForPayService()
 
 const createWayForPayForm = async (req: Request, res: Response) => {
-    console.log('Creating WayForPay form...')
+    console.log('Generating WayForPay form...')
 
     const currency = req.query.currency as string;
     const productName = req.query.productName as string[];
     const productCount = (req.query.productCount as string[]).map(count => parseInt(count));
     const bookingId = req.query.bookingId as string;
 
-    const booking = await Booking.findById(bookingId);
-    if (!booking) {
-        console.log('Fail at createWayForPayForm controller: booking with this ID not found')
-        res.status(404).send({ message: 'Booking with this ID not found' })
-    }
-
     try {
+        const booking = await Booking.findById(bookingId);
+        if (!booking) {
+            console.log('Fail at createWayForPayForm controller: booking with this ID not found')
+            res.status(404).send({ message: 'Booking with this ID not found' })
+        }
+        
         const form = await wfp.createPaymentForm({
             currency,
             productName,

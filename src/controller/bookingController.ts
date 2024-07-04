@@ -3,7 +3,7 @@ import BookModel from "../model/Booking";
 
 const createBooking = async (req: Request, res: Response) => {
     const productPrice = req.query.price;
-    const {bookingDate, bookingHours, customerName, customerPhone, customerEmail } = req.body;
+    const { bookingDate, bookingHours, customerName, customerPhone, customerEmail } = req.body;
     const orderDate = Math.floor(Date.now() / 1000);
     const orderReference = 'oid' + Math.floor(Math.random() * 1000000000000000);
     const productCount = 1;
