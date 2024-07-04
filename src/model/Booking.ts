@@ -11,6 +11,9 @@ interface IBooking extends Document {
     bookingHours?: string;
     paymentStatus?: string;
     reasonCode?: number;
+    customerName?: string;
+    customerPhone?: string;
+    customerEmail?: string;
 }
 
 const BookingSchema: Schema = new Schema({
@@ -24,6 +27,9 @@ const BookingSchema: Schema = new Schema({
     currency: { type: String },
     paymentStatus: { type: String },
     reasonCode: { type: Number },
+    customerName: { type: String },
+    customerPhone: { type: String },
+    customerEmail: { type: String }
 },
     {
         timestamps: true
