@@ -22,11 +22,6 @@ class WayForPayService {
         this.wfpApiUrl = process.env.WAYFORPAY_PURCHASE_URL!;
     }
 
-    generateSignature(...data: any): string {
-        const strginData = Object.values(data).join(';');
-        return crypto.createHmac('md5', this.merchantSecretKey).update(strginData).digest('hex');
-    }
-
     async createPaymentForm(params: PaymentForm): Promise<string> {
 
         const { currency, productName, productCount, orderReference } = params;
@@ -37,7 +32,7 @@ class WayForPayService {
         }
         const { orderDate, productPrice } = booking;
 
-        const message = `${this.merchantAccount};${this.merchantDomain};${orderReference};${orderDate};${productPrice};${currency};${productName};${productPrice};${productCount}`;
+        const message = `${this.merchantAccount};${this.merchantDomain};${orderReference};${orderDate};${productPrice};${currency};${productName};${productCount};${productPrice}`;
         const hmac = crypto.createHmac('md5', this.merchantSecretKey);
         hmac.update(message);
         const merchantSignature = hmac.digest('hex');
