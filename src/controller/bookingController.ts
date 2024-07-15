@@ -56,23 +56,23 @@ const getBookingRecords = async (req: Request, res: Response) => {
 }
 
 const updateBooking = async (req: Request, res: Response) => {
-    const { newBookingDate, oldBookingDate } = req.body;
+    const { newBookingDate, orderReference } = req.body;
 
     try {
         console.log('Looking for booking with this date and time...')
 
-        const booking = await BookModel.findOne({ bookingDate: oldBookingDate });
+        const booking = await BookModel.findOne({ orderReference });
         if (!booking) {
-            console.log('Booking with this date and time was not found')
-            res.status(404).json({ message: 'Booking with this date and time was not found' })
+            console.log('Booking with this ID was not found')
+            res.status(404).json({ message: 'Booking with this ID was not found' })
             throw new Error('Booking with this date and time was not found');
         }
 
         booking.bookingDate = newBookingDate;
         await booking.save();
 
-        console.log('Updated booking succesfully \n', { newBookingDate: newBookingDate, oldBookingDate: oldBookingDate });
-        res.status(200).json({ message: 'Updated booking succesfully', newBookingDate: newBookingDate, oldBookingDate: oldBookingDate })
+        console.log('Updated booking succesfully \n', { newBookingDate: newBookingDate, orderReference });
+        res.status(200).json({ message: 'Updated booking succesfully', newBookingDate: newBookingDate, orderReference })
     } catch (e: any) {
         console.log('Fail at updateBooking:', e.message)
         res.status(500).json({ message: e.message })
