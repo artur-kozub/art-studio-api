@@ -80,18 +80,18 @@ const updateBooking = async (req: Request, res: Response) => {
 }
 
 const deleteBooking = async (req: Request, res: Response) => {
-    const bookingDate = req.body.bookingDate;
+    const orderReference = req.body.orderReference;
 
     try {
         console.log('Deleting booking by date and time');
-        const booking = await BookModel.findOneAndDelete({ bookingDate });
+        const booking = await BookModel.findOneAndDelete({ orderReference });
         if (!booking) {
-            console.log('Fail at deleteBooking, the booking with this date and time was not found')
-            res.status(404).json({ message: 'Fail at deleteBooking, the booking with this date and time was not found' })
+            console.log('Fail at deleteBooking, the booking with OID was not found')
+            res.status(404).json({ message: 'Fail at deleteBooking, the booking with OID was not found' })
         }
 
-        console.log('Deleted booking successfully\n', bookingDate)
-        res.status(200).json({ message: 'Deleted booking successfully', bookingDate })
+        console.log('Deleted booking successfully\n', orderReference, booking?.bookingDate)
+        res.status(200).json({ message: 'Deleted booking successfully', orderReference })
     } catch (e: any) {
         console.log('Fail at deleteBooking', e.message)
         res.status(500).json({ message: e.message })
