@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import WayForPayService from '../service/paymentService';
 import Booking from '../model/Booking';
+import axios from 'axios';
 
 const wfp = new WayForPayService()
 
@@ -18,7 +19,7 @@ const createWayForPayForm = async (req: Request, res: Response) => {
             console.log('Fail at createWayForPayForm controller: booking with this ID not found')
             res.status(404).send({ message: 'Booking with this ID not found' })
         }
-        
+
         const form = await wfp.createPaymentForm({
             currency,
             productName,
@@ -49,7 +50,8 @@ const handleWayForPayStatus = async (req: Request, res: Response) => {
         }
     }
 
-    const { orderReference, transactionStatus, reasonCode } = requestBody;
+    const { orderReference, transactionStatus, reasonCode, merchantSignature } = requestBody;
+    const time: number = Math.floor(Date.now() / 1000);
 
     try {
         const booking = await Booking.findOne({ orderReference });
@@ -58,12 +60,35 @@ const handleWayForPayStatus = async (req: Request, res: Response) => {
             return res.status(404).send('Booking not found');
         }
 
+        if (booking.paymentStatus === 'Approved') {
+            return res.status(200).json({
+                orderReference,
+                status: "accept",
+                time,
+                signature: merchantSignature
+            });
+        }
+
         booking.paymentStatus = transactionStatus;
         booking.reasonCode = reasonCode;
         await booking.save();
 
-        console.log('Payment status updated succesfully');
-        res.status(200).send('Payment status updated succesfully');
+        if (transactionStatus === 'Approved') {
+            const message = `Оплачено нове бронювання:\nДата: ${booking.bookingDate}\nКількість годин: ${booking.bookingHours}\nID: ${booking.orderReference}`
+
+            const messageBot = await axios.post(`${process.env.BOT_BASE_URL}/send-message`, { message })
+
+            console.log('Response status:', messageBot.status);
+            console.log('Response data:', messageBot.data);
+            console.log('Payment status updated succesfully, the booking status is Approved');
+        }
+
+        return res.status(200).json({
+            orderReference,
+            status: transactionStatus === 'Approved' ? "accept" : "declined",
+            time,
+            signature: merchantSignature
+        });
     } catch (e: any) {
         console.error('Fail at handleWayForPayStatus:', e.message);
         res.status(500).send('Internal server error');
