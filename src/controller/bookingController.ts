@@ -11,7 +11,10 @@ const createBooking = async (req: Request, res: Response) => {
     const productName = process.env.PRODUCT_NAME;
 
     try {
-        const bookingExists = await BookModel.findOne({ bookingDate, paymentStatus: 'Approved' })
+        const normalizedDate = new Date(bookingDate).toISOString();
+        console.log('normalizedDate ' + normalizedDate + '\nbookingDate ' + bookingDate);
+
+        const bookingExists = await BookModel.findOne({ bookingDate: normalizedDate, paymentStatus: 'Approved' })
         if (bookingExists) {
             console.log('Failed at createBooking. Booking with this date and time already exists')
             return res.status(409).json({ message: 'Failed at createBooking. Booking with this date and time already exists' })
@@ -22,7 +25,7 @@ const createBooking = async (req: Request, res: Response) => {
             orderReference,
             orderDate,
             productCount,
-            bookingDate,
+            bookingDate: normalizedDate,
             bookingHours,
             currency,
             productName,
