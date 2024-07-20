@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import WayForPayService from '../service/paymentService';
 import Booking from '../model/Booking';
 import axios from 'axios';
+import { format, parseISO } from 'date-fns';
+import { uk } from 'date-fns/locale';
 
 const wfp = new WayForPayService()
 
@@ -74,7 +76,8 @@ const handleWayForPayStatus = async (req: Request, res: Response) => {
         await booking.save();
 
         if (transactionStatus === 'Approved') {
-            const message = `Оплачено нове бронювання:\nДата: ${booking.bookingDate}\nКількість годин: ${booking.bookingHours}\nID: ${booking.orderReference}`
+            const formattedDate = format(parseISO(booking.bookingDate), 'd MMMM yyyy, HH:mm', { locale: uk })
+            const message = `Оплачено нове бронювання:\nДата: ${formattedDate}\nКількість годин: ${booking.bookingHours}\nID: ${booking.orderReference}`
 
             const messageBot = await axios.post(`${process.env.BOT_BASE_URL}/send-message`, { message })
 
