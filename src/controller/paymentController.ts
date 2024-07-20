@@ -77,7 +77,7 @@ const handleWayForPayStatus = async (req: Request, res: Response) => {
 
         if (transactionStatus === 'Approved') {
             const formattedDate = format(parseISO(booking.bookingDate), 'd MMMM yyyy, HH:mm', { locale: uk })
-            const message = `Оплачено нове бронювання:\nДата: ${formattedDate}\nКількість годин: ${booking.bookingHours}\nID: ${booking.orderReference}`
+            const message = `🌸😀🥰 Оплачено нове бронювання:\n🗓️ Дата: ${formattedDate}\n⏳ Кількість годин: ${booking.bookingHours}\n#️⃣ ID: \`${booking.orderReference}\``
 
             const messageBot = await axios.post(`${process.env.BOT_BASE_URL}/send-message`, { message })
 
