@@ -4,6 +4,7 @@ import Booking from '../model/Booking';
 import axios from 'axios';
 import { format, parseISO } from 'date-fns';
 import { uk } from 'date-fns/locale';
+import { formatInTimeZone } from 'date-fns-tz';
 
 const wfp = new WayForPayService()
 
@@ -76,8 +77,9 @@ const handleWayForPayStatus = async (req: Request, res: Response) => {
         await booking.save();
 
         if (transactionStatus === 'Approved') {
+            const zonedTime = formatInTimeZone(booking.bookingDate, 'Europe/Kiev', 'd MMMM yyyy, HH:mm', { locale: uk })
             const formattedDate = format(parseISO(booking.bookingDate), 'd MMMM yyyy, HH:mm', { locale: uk })
-            const message = `🌸😀🥰 Оплачено нове бронювання:\n🗓️ Дата: \`${formattedDate}\`\n⏳ Кількість годин: ${booking.bookingHours}\n#️⃣ ID: \`${booking.orderReference}\`\n👤 Ім'я: ${booking.customerName}\n📱 Телефон: \`${booking.customerPhone}\`\n📧 Email: ${booking.customerEmail}`
+            const message = `🌸😀🥰 Оплачено нове бронювання:\n🗓️ Дата в базі даних\ дата на сервері: \`${formattedDate}\`\n 🗓️ Дата згідно з часовим поясом: \`${zonedTime}\`\n⏳ Кількість годин: ${booking.bookingHours}\n#️⃣ ID: \`${booking.orderReference}\`\n👤 Ім'я: ${booking.customerName}\n📱 Телефон: \`${booking.customerPhone}\`\n📧 Email: ${booking.customerEmail}`
 
             const messageBot = await axios.post(`${process.env.BOT_BASE_URL}/send-message`, { message })
 
