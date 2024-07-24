@@ -4,6 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import bookRoutes from './routes/bookingRoute';
 import paymentRoutes from './routes/paymentRoute';
+import adminRoutes from './routes/adminRoute'
 
 const app: Application = express();
 const PORT = process.env.EXPRESS_PORT || 5001;
@@ -17,6 +18,7 @@ app.use(cors());
 
 app.use(process.env.BOOKINGS_ENDPOINT + '', bookRoutes);
 app.use(process.env.PAYMENTS_ENDPOINT + '', paymentRoutes);
+app.use(process.env.ADMINS_ENDPOINT + '', adminRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
