@@ -5,6 +5,13 @@ const setAdmin = async (req: Request, res: Response) => {
     const { chatId, role } = req.body
 
     try {
+        const adminExists = await Admin.findOne({ chatId })
+
+        if (adminExists) {
+            console.log(`Admin with ${chatId} already exists`)
+            return res.status(409).json({ message:`Admin with ${chatId} already exists` })
+        }
+
         const admin = new Admin({
             chatId,
             role
@@ -12,7 +19,7 @@ const setAdmin = async (req: Request, res: Response) => {
 
         await admin.save();
 
-        res.status(201).json({ message: 'Admin has been set up succesfully' })
+        res.status(201).json({ message: 'Admin has been set up succesfully', admin })
     } catch (e: any) {
         console.log(e.message)
         return res.status(500).json({ message: 'Server error at setAdmin' })
@@ -20,7 +27,7 @@ const setAdmin = async (req: Request, res: Response) => {
 }
 
 const getAdmin = async (req: Request, res: Response) => {
-    const chatId = req.params;
+    const chatId = req.params.chatId;
 
     try {
         const admin = await Admin.findOne({ chatId })
@@ -30,7 +37,7 @@ const getAdmin = async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'Admin with this chatId not found' })
         }
 
-        res.status(201).json({ message: admin })
+        res.status(200).json({ admin })
         return admin;
     } catch (e: any) {
         console.log(e.message)
@@ -39,7 +46,7 @@ const getAdmin = async (req: Request, res: Response) => {
 }
 
 const deleteAdmin = async (req: Request, res: Response) => {
-    const chatId = req.params
+    const chatId = req.params.chatId;
 
     try {
         const admin = await Admin.findOne({ chatId })
