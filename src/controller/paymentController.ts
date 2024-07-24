@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import WayForPayService from '../service/paymentService';
 import Booking from '../model/Booking';
 import axios from 'axios';
-import { format, parseISO } from 'date-fns';
 import { uk } from 'date-fns/locale';
 import { formatInTimeZone } from 'date-fns-tz';
 
