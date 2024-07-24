@@ -4,6 +4,7 @@ import AdminController from '../controller/adminController';
 const router = express.Router();
 
 router.post('/set-admin', AdminController.setAdmin);
+router.get('/get/all', AdminController.getAllAdmins);
 router.get('/get/:chatId', AdminController.getAdmin);
 router.delete('/delete/:chatId', AdminController.deleteAdmin);
 

@@ -45,6 +45,17 @@ const getAdmin = async (req: Request, res: Response) => {
     }
 }
 
+const getAllAdmins = async (req: Request, res: Response) => {
+    try {
+        const admins = await Admin.find();
+
+        res.status(200).json({ admins })
+    } catch (e: any) {
+        console.log(e.message)
+        res.status(500).json({ message: 'Something went wrong at getAllAdmins' })
+    }
+}
+
 const deleteAdmin = async (req: Request, res: Response) => {
     const chatId = req.params.chatId;
 
@@ -64,4 +75,4 @@ const deleteAdmin = async (req: Request, res: Response) => {
     }
 }
 
-export default { setAdmin, deleteAdmin, getAdmin }
+export default { setAdmin, deleteAdmin, getAdmin, getAllAdmins }
