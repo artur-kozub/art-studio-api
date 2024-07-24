@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import BookModel from "../model/Booking";
+import { v4 as uuidv4 } from 'uuid';
 
 const createBooking = async (req: Request, res: Response) => {
     const productPrice = req.query.price;
     const { bookingDate, bookingHours, customerName, customerPhone, customerEmail } = req.body;
     const orderDate = Math.floor(Date.now() / 1000);
-    const orderReference = 'oid' + Math.floor(Math.random() * 1000000000000000);
+    const orderReference = 'oid' + uuidv4();
     const productCount = 1;
     const currency = 'UAH';
     const productName = process.env.PRODUCT_NAME;

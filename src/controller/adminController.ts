@@ -1,0 +1,60 @@
+import { Request, Response } from "express"
+import Admin from "../model/Admin"
+
+const setAdmin = async (req: Request, res: Response) => {
+    const { chatId, role } = req.body
+
+    try {
+        const admin = new Admin({
+            chatId,
+            role
+        })
+
+        await admin.save();
+
+        res.status(201).json({ message: 'Admin has been set up succesfully' })
+    } catch (e: any) {
+        console.log(e.message)
+        return res.status(500).json({ message: 'Server error at setAdmin' })
+    }
+}
+
+const getAdmin = async (req: Request, res: Response) => {
+    const chatId = req.params;
+
+    try {
+        const admin = await Admin.findOne({ chatId })
+
+        if (!admin) {
+            console.log(`Admin with chatId ${chatId} not found`)
+            return res.status(404).json({ message: 'Admin with this chatId not found' })
+        }
+
+        res.status(201).json({ message: admin })
+        return admin;
+    } catch (e: any) {
+        console.log(e.message)
+        return res.status(500).json({ message: 'Server error at getAdmin' })
+    }
+}
+
+const deleteAdmin = async (req: Request, res: Response) => {
+    const chatId = req.params
+
+    try {
+        const admin = await Admin.findOne({ chatId })
+
+        if (!admin) {
+            console.log(`Admin with chatId ${chatId} not found`)
+            return res.status(404).json({ message: 'Admin with this chatId not found' })
+        }
+
+        await admin?.deleteOne();
+        res.status(200).json({ message: 'Admin has been deleted' })
+    } catch (e: any) {
+        console.log(e.message)
+        return res.status(500).json({ message: 'Server error at deleteAdmin' })
+    }
+}
+
+export default { setAdmin, deleteAdmin, getAdmin }
