@@ -19,7 +19,7 @@ const sendEmail = async (email: string, bookingDate: string, customerName: strin
         from: '"Focus Photolab" <fokusfotolab@gmail.com>', 
         to: email,                
         subject: 'Дякуємо за бронювання 💞',
-        text: `Вітаю ${customerName}🥰 \nДякуємо, що обрали Focus Photolab \n Ваші дата та час бронювання: ${bookingDate},\n Адреса студії: місто Дніпро, вулиця Троїцька 21-г`,
+        text: `Вітаємо ${customerName}🥰 \n\nДякуємо, що обрали Focus Photolab \nВаші дата та час бронювання: ${bookingDate}, \n\nАдреса студії: місто Дніпро, вулиця Троїцька 21-г`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
