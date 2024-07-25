@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import WayForPayService from '../service/paymentService';
 import Booking from '../model/Booking';
+import { sendEmail } from '../utils/emailService';
 import axios from 'axios';
 import { uk } from 'date-fns/locale';
 import { formatInTimeZone } from 'date-fns-tz';
@@ -80,6 +81,11 @@ const handleWayForPayStatus = async (req: Request, res: Response) => {
             const message = `🌸😀🥰 Оплачено нове бронювання:\n🗓️ Дата: \`${zonedTime}\`\n⏳ Кількість годин: ${booking.bookingHours}\n#️⃣ ID: \`${booking.orderReference}\`\n👤 Ім'я: ${booking.customerName}\n📱 Телефон: \`${booking.customerPhone}\`\n📧 Email: ${booking.customerEmail}`
 
             const messageBot = await axios.post(`${process.env.BOT_BASE_URL}/send-message`, { message })
+
+            const email = booking.customerEmail || ''
+            const name = booking.customerName || ''
+
+            await sendEmail(email, zonedTime, name)
 
             console.log('Response status:', messageBot.status);
             console.log('Response data:', messageBot.data);
